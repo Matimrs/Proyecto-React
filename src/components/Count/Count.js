@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import "./Count.css"
 
 const Count = ({initial, stock , onAdd}) => {
     const [count, setCount] = useState(initial)
@@ -15,14 +15,14 @@ const Count = ({initial, stock , onAdd}) => {
     }
 
 return(
-        <div className="container">
-            <div>
-                <button onClick={increment} className="button">+</button>
-                <p>{count}</p>
-                <button onClick={decrement} className="button">-</button>
+        <div className="content">
+            <div className="columns">
+                <div className="column"><button onClick={increment} className="button is-link">+</button></div>
+                <div className="column"><p className="subtitle is-5">{count}</p></div>
+                <div className="column"><button onClick={decrement} className="button is-link">-</button></div> 
             </div>
-            <div>
-                <button onClick={()=>{onAdd(count)}} disabled = {!stock} className="button">Agregar al carrito</button>
+            <div className="">
+                <button onClick={()=>{onAdd(count)}} disabled = {!stock} className="button is-link">Agregar al carrito</button>
             </div>
         </div>
 )

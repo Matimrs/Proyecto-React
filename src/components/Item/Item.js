@@ -1,21 +1,21 @@
 import { Link } from "react-router-dom";
-
+import './Item.css';
 const Item = ({id, name, price, img, stock, description}) =>{
     return (
-        <article className="card container is-fluid">
-            <header className="card-header">
-                <h2 className="ItemName">
+        <article className="item box">
+            <header className="centrado">
+                <h2 className="title is-4">
                     {name}
                 </h2>
             </header>
-            <picture>
-                <img src={img} alt={name} className="card-image"/>
+            <picture className="centrado pictureImagen">
+                <img src={img} alt={name} className="imagen" />
             </picture>
-            <section className="card-content">
-                <p>Precio: ${price}</p>
-                <p>Stock: {stock}</p>
+            <section className="itemInfo centrado">
+                <p className="subtitle is-6">Precio: ${price}</p>
+                <p className="subtitle">Stock: {stock}</p>
             </section>
-            <footer className="card-footer">
+            <footer className="centrado">
                 <Link to={`/item/${id}`} className="button is-link">Ver detalles</Link>
             </footer>
         </article>
