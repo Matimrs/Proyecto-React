@@ -15,13 +15,13 @@ export const CartProvider = ({children})=>{
 
     const addItem = (item, q)=>{
         if(!inCart(item)){
-            setCart(cart.push({...item,q}));
+            setCart([...cart, {...item, q}]);
         }
         else alert("El producto ya se agregó");
     }
 
-    const removeItem = (item)=>{
-        const newCart = cart.filter(e => e.id !== item.id);
+    const removeItem = (id)=>{
+        const newCart = cart.filter(e => e.id !== id);
         setCart(newCart);
     }
 
@@ -29,8 +29,12 @@ export const CartProvider = ({children})=>{
         setCart([]);
     }
 
+    const total = cart.reduce((acc,e)=> acc + e.price, 0).toFixed(2);
+
+    const totalQuantity = cart.reduce((acc,e)=> acc + e.q ,0);
+
     return(
-        <CartContext.Provider value = {{cart, addItem, removeItem, clearCart}}>
+        <CartContext.Provider value = {{cart, addItem, removeItem, clearCart, total, totalQuantity}}>
             {
                 children
             }
