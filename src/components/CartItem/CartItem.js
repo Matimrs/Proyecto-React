@@ -5,6 +5,7 @@ import { CartContext } from "../../context/CartContext"
 export const CartItem = ({id,name,price,img,q})=>{
 
     const {removeItem} = useContext(CartContext);
+    const priceProduct = q * price;
 
 return(
     <article className="itemDetail box">
@@ -17,6 +18,7 @@ return(
         <section className=" itemInfo centrado">
             <p className="subtitle is-6">Precio unitario: ${price}</p>
             <p className="subtitle is-6">Cantidad: {q}</p>
+            <p className="subtitle is-6">Total: ${priceProduct}</p>
         </section>
         <footer>
             <button className="button is-link" onClick={()=>{removeItem(id)}}>Eliminar del carrito</button>

@@ -27,7 +27,7 @@ export const Cart = ()=>{
             }
             <h3>Total a pagar: ${total}</h3>
             <button className="button is-link" onClick={()=>{clearCart()}}>Vaciar Carrito</button>
-            <Link to='/checkout'>checkout</Link>
+            <Link to='/checkout'><button className="button">Comprar</button></Link>
 
         </div>
     )

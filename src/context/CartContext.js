@@ -29,7 +29,7 @@ export const CartProvider = ({children})=>{
         setCart([]);
     }
 
-    const total = cart.reduce((acc,e)=> acc + e.price, 0).toFixed(2);
+    const total = cart.reduce((acc,e)=> acc + e.price, 0);
 
     const totalQuantity = cart.reduce((acc,e)=> acc + e.q ,0);
 
