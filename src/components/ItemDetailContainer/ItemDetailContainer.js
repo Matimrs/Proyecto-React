@@ -1,19 +1,38 @@
 import {useEffect , useState} from "react";
 import ItemDetail from "../ItemDetail/ItemDetail";
-import {getProductById} from "../../asyncMock";
 import { useParams } from "react-router-dom";
 import "./ItemDetailContainer.css";
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "../../config/firebase";
 
 const ItemDetailContainer = () => {
 
-   const [product, setProduct] = useState(null);
+    const [product, setProduct] = useState(null);
+
+    //const [loading, setLoading] = useState(true);
 
     const { itemId } = useParams()
 
     useEffect(()=>{
-        getProductById(itemId)                 /*Cambiar el id segun el indicado*/
-        .then(response => { setProduct(response) })
-        .catch(error => { console.error(error) });
+        //setLoading(true);
+
+        const docRef = doc(db,"items", itemId);
+
+        getDoc(docRef)
+            .then(res => {
+                const itemFiltered = {
+                    id: res.id, 
+                    ...res.data()
+                }
+                    setProduct(itemFiltered);
+            })
+            .catch(error =>{
+                console.error(error);
+            })
+            .finally(()=>{
+                //setLoading(false);
+            })
+
     },[itemId])
 
     return(

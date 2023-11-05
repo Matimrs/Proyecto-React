@@ -1,28 +1,47 @@
 import { useEffect, useState } from 'react' 
 import ItemList from '../ItemList/ItemList';
-import {getProducts, getProductsByCategory} from '../../asyncMock';
 import { useParams } from "react-router-dom";
+import { db } from '../../config/firebase';
+import { collection, getDocs, where , query } from 'firebase/firestore';
 
 const ItemListContainer= ({text})=>{
 
-const [products, setProducts]= useState([]);
+const [items, setItems]= useState([]);
+
+//const [loading, setLoading] = useState(true);
 
 const {categoryId} = useParams()
 
 useEffect(()=>{
+    
+    //setLoading(true);
 
-    const asyncFunction = categoryId ? getProductsByCategory : getProducts
+    const collectionRef =  categoryId ? query(collection(db,"items"), where('category', '==' ,categoryId)) 
+    : 
+    collection(db,"items")
 
-    asyncFunction(categoryId)
-    .then(response => {setProducts(response)})
-    .catch(error => {console.error(error)})
+    getDocs(collectionRef)
+        .then(res => {
+            const itemsFiltered = res.docs.map((doc)=>({
+                    ...doc.data(),
+                    id: doc.id
+                }))
+                setItems(itemsFiltered);
+        })
+        .catch(error =>{
+            console.error(error);
+        })
+        .finally(()=>{
+            //setLoading(false);
+        })
+
 }, [categoryId])
 
 
 return(
     <div className="hero">
         <h3 className="subtitle">{text}</h3>
-        <ItemList products={products}/>
+        <ItemList products={items}/>
     </div>
         
 )
