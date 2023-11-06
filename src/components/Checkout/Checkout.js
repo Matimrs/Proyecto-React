@@ -1,5 +1,4 @@
 import { useContext, useState } from "react"
-import { Cart } from "../Cart/Cart"
 import { CheckoutForm } from "../CheckoutForm/CheckoutForm"
 import { CartContext } from "../../context/CartContext"
 import { Timestamp, addDoc } from "firebase/firestore"
@@ -12,9 +11,14 @@ export const Checkout=()=>{
     
     const {cart, total, clearCart} = useContext(CartContext);
 
+    const[loading, setLoading] = useState(false);
+
     const [orderId, setOrderId] = useState('');
 
     const createOrder = async ({name, phone, email})=>{
+
+            setLoading(true);
+
             try{
                 const order ={
                     buyer:{
@@ -35,18 +39,19 @@ export const Checkout=()=>{
 
             const itemsRef = collection(db,"items");
             
-            const itemsAdded = await getDocs(query(itemsRef),where(documentId(),'in',ids))
+            const itemsAdded = await getDocs(query(itemsRef,where(documentId(),'in',ids)))
 
             const { docs } = itemsAdded
 
             docs.forEach(doc =>{
+                
                 const data = doc.data();
 
                 const stockDb = data.stock;
 
                 const itemAdded = cart.find(i => i.id === doc.id);
 
-                const itemQ = itemAdded?.quantity;
+                const itemQ = itemAdded?.q;
 
                 if(stockDb >= itemQ){
                     batch.update(doc.ref,{stock: stockDb - itemQ})
@@ -66,13 +71,19 @@ export const Checkout=()=>{
                 
                 clearCart();
             }else{
-                console.error("Productos se encuentran fuera de stock")
+                console.log("Productos se encuentran fuera de stock")
             }
             }catch(error){
-                alert(error);
+                console.error(error);
+            }finally{
+                setLoading(false);
             }
-        }
+    }
 
+    if(loading){
+        return(<h2>Se esta generando su orden de compra...</h2>)
+    }
+    
     if(orderId){
         return(
             <h2>El ID de su orden es: {orderId}</h2>
